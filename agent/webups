@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /usr/lib/check_mk_agent/webups
+echo "<<<webups>>>"
+./webups.py 10.103.254.158 webups_sensors.csv
