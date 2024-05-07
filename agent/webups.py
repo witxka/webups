@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-# Description  : Read tecnair conditioner sensors through modbus and ouput it as JSON.
-#                Sensors are given with csv file. The output with check_mk header.
-#                The script use agent_modbus cpp application.
+# Description  : Read webups sensors through http and ouput it as JSON.
+#                Sensors are given with csv file.
 # Author       : witxka@gmail.com 
 
 import subprocess
@@ -20,12 +19,12 @@ def strToFloat(strVal):
   except ValueError as e:
     return None
 
-def get_info(sensors, scope, tecnairIP):
-    """Get sensors values from tecnair conditioner through modbus over IP and output them as JSON.
+def get_info(sensors, scope, webupsIP):
+    """Get sensors values from webups through curl over http and output them as JSON.
 
     @param sensors   The dictionary of sensors to read and format output.
     @param scope     The scope for sensor parameters.
-    @param tecnairIP The IP address for tecnair conditioner to connect to modbus over IP.
+    @param webupsIP  The IP address for webups to connect to http.
     @return The dictionary for sensors values with their parameters.
     """
 
@@ -34,14 +33,12 @@ def get_info(sensors, scope, tecnairIP):
     info["Adapter"] = "parameters"
     outputDict = {}
 
-    webupsInfo = subprocess.check_output(["curl","-s","http://" + tecnairIP +
+    webupsInfo = subprocess.check_output(["curl","-s","http://" + webupsIP +
         "/cgi-bin/realInfo.cgi"])
     webupsParams = webupsInfo.splitlines()
 
     for sensor in sensors:
       sensorDict = {}
-      print(strToFloat(webupsParams[int(sensor["position"])]))
-      print(strToFloat(sensor["multiply"]))
       sensorDict[sensor["name"] + "_input"] = round(strToFloat(webupsParams[int(sensor["position"])-1])*strToFloat(sensor["multiply"]),2)
       sensorDict[sensor["name"] + "_max"] = strToFloat(sensor["warn"])
       sensorDict[sensor["name"] + "_crit"] = strToFloat(sensor["crit"])
@@ -57,12 +54,12 @@ def read_csv(filename):
     return [dict(zip(headers,i)) for i in file_data]
 
 def main():
-  """Main function. Read sensors for tecnair conditioner and 
+  """Main function. Read sensors for webups and 
     output them as JSON.
     
-  @param argv[1] The IP address for tecnair conditioner.
-  @param argv[2] The csv file with tecnair sensors to check.
-  @param argv[3:] Additional csv files with tecnair sensors to check.
+  @param argv[1] The IP address for webups.
+  @param argv[2] The csv file with webups sensors to check.
+  @param argv[3:] Additional csv files with webups sensors to check.
   @return The output in JSON format.
   """
 
@@ -70,17 +67,17 @@ def main():
     # add param checking
     if (len(sys.argv) < 3):
       print("Usage: {0} IP sensors1.csv [...] ".format(sys.argv[0]))
-      print("  IP: The IP address for modbus over IP for tecnair conditioner")
-      print("  sensors1.csv: The csv file with tenair modbus sensors to check")
-      print("  ...: Additionals csv files with tenair modbus sensors to check")
+      print("  IP: The IP address for http for webups")
+      print("  sensors1.csv: The csv file with webups sensors to check")
+      print("  ...: Additionals csv files with webups sensors to check")
       sys.exit(0)
 
-    tecnairIP = sys.argv[1]
+    webupsIP = sys.argv[1]
     info = {}
     for i in range(2,len(sys.argv)):
       sensors = read_csv(sys.argv[i])
       scope = sys.argv[i].split(".")[0]
-      info.update(get_info(sensors, scope, tecnairIP).items());
+      info.update(get_info(sensors, scope, webupsIP).items());
     print(json.dumps(info))
   except Exception as e:
     logging.error(traceback.format_exc())

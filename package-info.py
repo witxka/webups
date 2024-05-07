@@ -17,7 +17,7 @@
            'web': []},
  'name': 'webups',
  'title': ' webups plugin for check_mk 2',
- 'version': '1.0',
+ 'version': '1.1',
  'version.min_required': '2.2.0p11',
  'version.packaged': '2.2.0p11',
  'version.usable_until': None}
