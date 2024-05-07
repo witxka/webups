@@ -1,0 +1,7 @@
+position,desc,type,multiply,min,warn,crit,name
+2,Ups temp,C,0.1,15,40,45,temp_ups
+3,ECO mode,bool,1,0,1,1,eco_mode
+4,Converter mode,bool,1,0,1,1,converter_mode
+5,Bypass not allowed,bool,1,0,1,1,bypass_not_allowed
+6,Bypass wen UPS is of,bool,1,0,0,0,bypass_when_off
+7,UPS warning,bool,1,0,1,1,ups_warn
