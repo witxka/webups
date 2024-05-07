@@ -2,16 +2,16 @@ stages:
   - build
 
 build:
-  image: checkmk/check-mk-raw:2.2.0p11
+  image: checkmk/check-mk-raw:2.0.0p30
   stage: build
   before_script:
     - su -c "mkdir -p ~/var/check_mk/packages/" -s /bin/sh cmk
     - su -c "./copy-to-target.sh" -s /bin/sh cmk
   script:
-    - su -c 'source ~/.bashrc; mkp package webups' -s /bin/bash cmk
+    - su -c 'source ~/.bashrc; cmk -P pack webups' -s /bin/bash cmk
     # test if mkp package exists
     - ls /omd/sites/cmk/webups-*.mkp
-    - mv /omd/sites/cmk/webups-*.mkp .
+    - mv /omd/sites/cmk/webups--*.mkp .
   artifacts:
     paths:
       - webups-*.mkp 
