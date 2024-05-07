@@ -11,7 +11,7 @@ build:
     - su -c 'source ~/.bashrc; cmk -P pack webups' -s /bin/bash cmk
     # test if mkp package exists
     - ls /omd/sites/cmk/webups-*.mkp
-    - mv /omd/sites/cmk/webups--*.mkp .
+    - mv /omd/sites/cmk/webups-*.mkp .
   artifacts:
     paths:
       - webups-*.mkp 
