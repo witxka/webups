@@ -8,12 +8,12 @@ build:
     - su -c "mkdir -p ~/var/check_mk/packages/" -s /bin/sh cmk
     - su -c "./copy-to-target.sh" -s /bin/sh cmk
   script:
-    - su -c 'source ~/.bashrc; cmk -P pack tecnair' -s /bin/bash cmk
+    - su -c 'source ~/.bashrc; mkp pack webups' -s /bin/bash cmk
     # test if mkp package exists
-    - ls /omd/sites/cmk/tecnair-*.mkp
-    - mv /omd/sites/cmk/tecnair-*.mkp .
+    - ls /omd/sites/cmk/webups-*.mkp
+    - mv /omd/sites/cmk/webups-*.mkp .
   artifacts:
     paths:
-      - tecnair-*.mkp 
+      - webups-*.mkp 
 
 
